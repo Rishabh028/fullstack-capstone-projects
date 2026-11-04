@@ -1,0 +1,107 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: saas_pm
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d saas_pm"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  redis:
+    image: redis:7-alpine
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app_network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app
+      - media_files:/app/media
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: python manage.py runserver 0.0.0.0:8000
+    networks:
+      - app_network
+
+  celery-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app
+      - media_files:/app/media
+    env_file:
+      - .env
+    command: celery -A celery_app.celery worker --loglevel=info
+    depends_on:
+      backend:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  celery-beat:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app
+      - media_files:/app/media
+    env_file:
+      - .env
+    command: celery -A celery_app.celery beat --loglevel=info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    depends_on:
+      backend:
+        condition: service_started
+      redis:
+        condition: service_healthy
+    networks:
+      - app_network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    networks:
+      - app_network
+
+volumes:
+  postgres_data:
+  redis_data:
+  media_files:
+
+networks:
+  app_network:
+    driver: bridge
