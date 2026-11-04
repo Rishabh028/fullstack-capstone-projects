@@ -235,7 +235,7 @@ class Command(BaseCommand):
                                 content=fake.sentence(nb_words=12)
                             )
 
-                    self.stdout.write(f"  ✓ Created Project {project.key} with Board, 2 Sprints, and 20 Issues.")
+                    self.stdout.write(f"  [OK] Created Project {project.key} with Board, 2 Sprints, and 20 Issues.")
 
         self.stdout.write(self.style.SUCCESS("\nDatabase successfully seeded with realistic multi-tenant data!"))
         self.stdout.write(self.style.SUCCESS("All users created with default password: 'Password123!'"))
