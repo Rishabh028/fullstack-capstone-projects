@@ -1,0 +1,113 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  OWNER
+  ADMIN
+  EDITOR
+  VIEWER
+}
+
+enum DocumentType {
+  DOCUMENT
+  CANVAS
+}
+
+model User {
+  id               String            @id @default(cuid())
+  email            String            @unique
+  name             String
+  passwordHash     String
+  avatarUrl        String?
+  color            String            @default("#6366f1")
+  ownedWorkspaces  Workspace[]       @relation("WorkspaceOwner")
+  workspaceMembers WorkspaceMember[]
+  documents        Document[]        @relation("UserDocuments")
+  comments         Comment[]
+  snapshots        Snapshot[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+}
+
+model Workspace {
+  id          String            @id @default(cuid())
+  name        String
+  slug        String            @unique
+  icon        String?           @default("📁")
+  ownerId     String
+  owner       User              @relation("WorkspaceOwner", fields: [ownerId], references: [id], onDelete: Cascade)
+  members     WorkspaceMember[]
+  documents   Document[]
+  createdAt   DateTime          @default(now())
+  updatedAt   DateTime          @updatedAt
+}
+
+model WorkspaceMember {
+  id          String    @id @default(cuid())
+  workspaceId String
+  userId      String
+  role        Role      @default(EDITOR)
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([workspaceId, userId])
+}
+
+model Document {
+  id          String       @id @default(cuid())
+  title       String       @default("Untitled")
+  icon        String?      @default("📄")
+  coverImage  String?
+  type        DocumentType @default(DOCUMENT)
+  content     String?      @db.Text
+  yjsState    String?      @db.Text
+  workspaceId String
+  workspace   Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  parentId    String?
+  parent      Document?    @relation("NestedDocuments", fields: [parentId], references: [id], onDelete: SetNull)
+  children    Document[]   @relation("NestedDocuments")
+  createdById String
+  createdBy   User         @relation("UserDocuments", fields: [createdById], references: [id], onDelete: Cascade)
+  isArchived  Boolean      @default(false)
+  isPublished Boolean      @default(false)
+  comments    Comment[]
+  snapshots   Snapshot[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Comment {
+  id             String    @id @default(cuid())
+  documentId     String
+  document       Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  content        String    @db.Text
+  selectionRange String?   @db.Text
+  resolved       Boolean   @default(false)
+  parentId       String?
+  parent         Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies        Comment[] @relation("CommentReplies")
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+}
+
+model Snapshot {
+  id          String    @id @default(cuid())
+  documentId  String
+  document    Document  @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  title       String    @default("Snapshot")
+  yjsState    String    @db.Text
+  previewText String?   @db.Text
+  createdById String?
+  createdBy   User?     @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now())
+}
