@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: collab_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: collab_user
+      POSTGRES_PASSWORD: collab_password
+      POSTGRES_DB: collab_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U collab_user -d collab_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: collab_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # WebSocket Node 1 (Simulates horizontal scaling across multiple instances)
+  collab-ws-1:
+    build:
+      context: .
+      dockerfile: Dockerfile.ws
+    container_name: collab_ws_1
+    restart: always
+    environment:
+      PORT: 1234
+      NODE_ID: "ws-node-1"
+      REDIS_URL: "redis://redis:6379"
+      DATABASE_URL: "postgresql://collab_user:collab_password@postgres:5432/collab_db?schema=public"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "1234:1234"
+
+  # WebSocket Node 2 (Second instance synced seamlessly via Redis Pub/Sub)
+  collab-ws-2:
+    build:
+      context: .
+      dockerfile: Dockerfile.ws
+    container_name: collab_ws_2
+    restart: always
+    environment:
+      PORT: 1235
+      NODE_ID: "ws-node-2"
+      REDIS_URL: "redis://redis:6379"
+      DATABASE_URL: "postgresql://collab_user:collab_password@postgres:5432/collab_db?schema=public"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "1235:1235"
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.web
+    container_name: collab_web
+    restart: always
+    environment:
+      DATABASE_URL: "postgresql://collab_user:collab_password@postgres:5432/collab_db?schema=public"
+      REDIS_URL: "redis://redis:6379"
+      NEXT_PUBLIC_WS_URL: "ws://localhost:1234"
+      JWT_SECRET: "collab-super-secret-production-key-2026"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
+  redis_data:

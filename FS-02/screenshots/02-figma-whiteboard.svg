@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" width="100%" height="100%">
+  <rect width="900" height="500" rx="12" fill="#0b0f19"/>
+  <!-- App Header -->
+  <rect x="0" y="0" width="900" height="54" fill="#131b2e"/>
+  <text x="30" y="32" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14" font-weight="600">FS-02: Multiplayer Whiteboard &amp; Infinite Canvas (Figma-Style)</text>
+  <rect x="760" y="14" width="110" height="26" rx="6" fill="#6366f1"/>
+  <text x="815" y="31" fill="#ffffff" font-family="system-ui, sans-serif" font-size="12" font-weight="600" text-anchor="middle">Share Canvas</text>
+
+  <!-- Canvas Grid Background -->
+  <defs>
+    <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#334155"/>
+    </pattern>
+  </defs>
+  <rect x="30" y="70" width="840" height="400" rx="8" fill="#0f172a"/>
+  <rect x="30" y="70" width="840" height="400" rx="8" fill="url(#grid)"/>
+
+  <!-- Toolbar Floating -->
+  <rect x="320" y="85" width="260" height="38" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="340" y="108" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="13" font-weight="600">Select  |  Rect  |  Circle  |  Sticky  |  Card</text>
+
+  <!-- Sticky Note 1 -->
+  <rect x="90" y="160" width="160" height="150" rx="4" fill="#fef08a" stroke="#facc15" stroke-width="2"/>
+  <text x="105" y="195" fill="#854d0e" font-family="system-ui, sans-serif" font-size="13" font-weight="700">Sprint Retrospective</text>
+  <text x="105" y="225" fill="#713f12" font-family="system-ui, sans-serif" font-size="12">Multi-user CRDT sync</text>
+  <text x="105" y="245" fill="#713f12" font-family="system-ui, sans-serif" font-size="12">tested with 100 peers</text>
+  <text x="105" y="265" fill="#713f12" font-family="system-ui, sans-serif" font-size="12">at 12ms latency!</text>
+
+  <!-- Sticky Note 2 -->
+  <rect x="290" y="190" width="160" height="150" rx="4" fill="#bfdbfe" stroke="#60a5fa" stroke-width="2"/>
+  <text x="305" y="225" fill="#1e3a8a" font-family="system-ui, sans-serif" font-size="13" font-weight="700">Redis Pub/Sub</text>
+  <text x="305" y="255" fill="#1e40af" font-family="system-ui, sans-serif" font-size="12">Syncs multiple</text>
+  <text x="305" y="275" fill="#1e40af" font-family="system-ui, sans-serif" font-size="12">WebSocket nodes</text>
+  <text x="305" y="295" fill="#1e40af" font-family="system-ui, sans-serif" font-size="12">seamlessly.</text>
+
+  <!-- Shapes -->
+  <rect x="520" y="180" width="170" height="110" rx="10" fill="#334155" stroke="#10b981" stroke-width="2"/>
+  <text x="605" y="240" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14" font-weight="600" text-anchor="middle">Architecture Node</text>
+
+  <!-- Alice Cursor with pointer arrow -->
+  <polygon points="260,150 268,172 276,165 288,178 293,174 281,161 290,155" fill="#f43f5e"/>
+  <rect x="270" y="130" width="80" height="18" rx="4" fill="#f43f5e"/>
+  <text x="310" y="143" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle">Alice (Dragging)</text>
+
+  <!-- Charlie Cursor -->
+  <polygon points="700,280 708,302 716,295 728,308 733,304 721,291 730,285" fill="#f59e0b"/>
+  <rect x="710" y="260" width="85" height="18" rx="4" fill="#f59e0b"/>
+  <text x="752" y="273" fill="#ffffff" font-size="10" font-weight="600" text-anchor="middle">Charlie (Editing)</text>
+</svg>

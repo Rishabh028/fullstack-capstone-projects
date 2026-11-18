@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 500" width="100%" height="100%">
+  <rect width="900" height="500" rx="12" fill="#0f172a"/>
+  <rect x="0" y="0" width="900" height="54" fill="#1e293b"/>
+  <text x="30" y="33" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="14" font-weight="600">FS-04: Sprint Planning &amp; Velocity Tracker</text>
+  <rect x="750" y="14" width="120" height="26" rx="6" fill="#10b981"/>
+  <text x="810" y="31" fill="#ffffff" font-family="system-ui, sans-serif" font-size="12" font-weight="600" text-anchor="middle">Start Sprint</text>
+
+  <!-- Active Sprint Card -->
+  <rect x="30" y="80" width="840" height="150" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="50" y="115" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="16" font-weight="700">Sprint 12 (Active) · Ends in 5 days</text>
+  <text x="50" y="140" fill="#94a3b8" font-family="system-ui, sans-serif" font-size="13">Commitment: 38 Story Points · Completed: 22 Points (58%)</text>
+  <!-- Progress bar -->
+  <rect x="50" y="160" width="800" height="14" rx="7" fill="#334155"/>
+  <rect x="50" y="160" width="464" height="14" rx="7" fill="#3b82f6"/>
+  <text x="50" y="205" fill="#60a5fa" font-family="system-ui, sans-serif" font-size="12">14 issues in sprint · 6 issues in review · 8 closed</text>
+
+  <!-- Backlog Section -->
+  <rect x="30" y="255" width="840" height="215" rx="8" fill="#1e293b" stroke="#334155" stroke-width="1"/>
+  <text x="50" y="290" fill="#f8fafc" font-family="system-ui, sans-serif" font-size="16" font-weight="700">Backlog (12 issues · 54 Story Points)</text>
+  <rect x="50" y="310" width="800" height="40" rx="6" fill="#334155"/>
+  <text x="70" y="335" fill="#f1f5f9" font-family="system-ui, sans-serif" font-size="13">ISSUE-142: Migrate audit log queries to indexed composite keys</text>
+  <rect x="50" y="360" width="800" height="40" rx="6" fill="#334155"/>
+  <text x="70" y="385" fill="#f1f5f9" font-family="system-ui, sans-serif" font-size="13">ISSUE-143: Automatic email digest celery-beat task</text>
+  <rect x="50" y="410" width="800" height="40" rx="6" fill="#334155"/>
+  <text x="70" y="435" fill="#f1f5f9" font-family="system-ui, sans-serif" font-size="13">ISSUE-144: Add dark/light mode toggle in user preferences</text>
+</svg>
